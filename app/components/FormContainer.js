@@ -12,7 +12,7 @@ const FormContainer = ({ children }) => {
     <KeyboardAvoidingView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Image style={styles.logo} source={require("../assets/logo.png")} />
-        {children}
+          {children}
       </ScrollView>
     </KeyboardAvoidingView>
   );
