@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {navigateToForgetPassword, navigateToLogin} from '../../utils/helper.js';
 import * as yup from 'yup';
 import CustomFormik from '../CustomFormik.js';
-import axios from 'axios';
+import {register} from '../../utils/auth.js';
 
 const initialValues = {
   userName: '',
@@ -32,18 +32,14 @@ const Signup = () => {
   const navigation = useNavigation();
 
   const handleSignUp = async (values, formikActions) => {
-    try {
-      const {data} = await axios.post(
-        'http://192.168.1.9:8000/profile/auth/register',
-        {...values},
-      );
-      console.log(data);
+    const res = await register(values);
+    formikActions.setSubmitting(false);
 
-      formikActions.resetForm();
-      formikActions.setSubmitting(false);
-    } catch (error) {
-      console.log(error);
+    if (!res.success) {
+      return console.log(res.error);
     }
+    formikActions.resetForm();
+    console.log(res);
   };
 
   return (

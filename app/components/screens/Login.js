@@ -9,6 +9,7 @@ import {
 } from '../../utils/helper.js';
 import * as yup from 'yup';
 import CustomFormik from '../CustomFormik.js';
+import {login} from '../../utils/auth.js';
 
 const initialValues = {
   email: '',
@@ -31,12 +32,15 @@ const validationSchema = yup.object({
 const Login = () => {
   const navigation = useNavigation();
 
-  const handleLogin = (values, formikActions) => {
-    setTimeout(() => {
-      console.log(values, formikActions);
-      formikActions.resetForm();
-      formikActions.setSubmitting(false);
-    }, 3000);
+  const handleLogin = async (values, formikActions) => {
+    const res = await login(values);
+    formikActions.setSubmitting(false);
+
+    if (!res.success) {
+      return console.log(res.error);
+    }
+    formikActions.resetForm();
+    console.log(res);
   };
 
   return (
