@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {navigateToForgetPassword, navigateToLogin} from '../../utils/helper.js';
 import * as yup from 'yup';
 import CustomFormik from '../CustomFormik.js';
+import axios from 'axios';
 
 const initialValues = {
   userName: '',
@@ -30,12 +31,19 @@ const validationSchema = yup.object({
 const Signup = () => {
   const navigation = useNavigation();
 
-  const handleSignUp = (values, formikActions) => {
-    setTimeout(() => {
-      console.log(values, formikActions);
+  const handleSignUp = async (values, formikActions) => {
+    try {
+      const {data} = await axios.post(
+        'http://192.168.1.9:8000/profile/auth/register',
+        {...values},
+      );
+      console.log(data);
+
       formikActions.resetForm();
       formikActions.setSubmitting(false);
-    }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
