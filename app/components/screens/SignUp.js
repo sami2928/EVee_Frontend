@@ -2,7 +2,7 @@ import AppInput from '../AppInput';
 import FormContainer from '../FormContainer';
 import FormNavigator from '../FormNavigator';
 import SubmitButton from '../SubmitButton';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, StackActions} from '@react-navigation/native';
 import {
   navigateToForgetPassword,
   navigateToSignIn,
@@ -49,7 +49,9 @@ const SignUp = () => {
       return updateNotification(setMessage, res.error);
     }
     formikActions.resetForm();
-    console.log(res);
+    navigation.dispatch(
+      StackActions.replace('Verification', {profile: res.user}),
+    );
   };
 
   return (
