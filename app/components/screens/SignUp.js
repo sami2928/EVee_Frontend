@@ -1,49 +1,55 @@
-import React from 'react';
-import {StyleSheet} from 'react-native';
+import AppInput from '../AppInput';
 import FormContainer from '../FormContainer';
 import FormNavigator from '../FormNavigator';
-import AppInput from '../AppInput';
 import SubmitButton from '../SubmitButton';
 import {useNavigation} from '@react-navigation/native';
 import {
+  navigateToForgetPassword,
   navigateToSignIn,
-  navigateToSignUp,
   updateNotification,
 } from '../../utils/helper.js';
 import * as yup from 'yup';
 import CustomFormik from '../CustomFormik.js';
-import {forgetPassword} from '../../utils/auth.js';
+import {register} from '../../utils/auth.js';
 import AppNotification from '../AppNotification.js';
 import {useState} from 'react';
 
 const initialValues = {
+  userName: '',
   email: '',
+  password: '',
 };
 
 const validationSchema = yup.object({
+  userName: yup.string().trim().required('Username is missing!'),
   email: yup
     .string()
     .trim()
     .email('Invalid email!')
     .required('Email is missing!'),
+  password: yup
+    .string()
+    .trim()
+    .min(8, 'Password is too short!')
+    .required('Password is missing!'),
 });
 
-const ForgetPassword = () => {
+const SignUp = () => {
   const navigation = useNavigation();
   const [message, setMessage] = useState({
     text: '',
     type: '',
   });
 
-  const resetLink = async (values, formikActions) => {
-    const res = await forgetPassword(values.email);
+  const handleSignUp = async (values, formikActions) => {
+    const res = await register(values);
     formikActions.setSubmitting(false);
 
     if (!res.success) {
       return updateNotification(setMessage, res.error);
     }
     formikActions.resetForm();
-    updateNotification(setMessage, res.message, 'success');
+    console.log(res);
   };
 
   return (
@@ -56,14 +62,16 @@ const ForgetPassword = () => {
         <CustomFormik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={resetLink}>
+          onSubmit={handleSignUp}>
+          <AppInput name="userName" placeholder="username" />
           <AppInput name="email" placeholder="Email" />
-          <SubmitButton title={'send link'} style={styles.subBtn} />
+          <AppInput secureTextEntry name="password" placeholder="Password" />
+          <SubmitButton title="Sign Up" />
           <FormNavigator
             onLeftLinkPress={navigateToSignIn(navigation)}
-            onRightLinkPress={navigateToSignUp(navigation)}
+            onRightLinkPress={navigateToForgetPassword(navigation)}
             leftLinkText="Sign In"
-            rightLinkText="Sign Up"
+            rightLinkText="Forget Password"
           />
         </CustomFormik>
       </FormContainer>
@@ -71,10 +79,4 @@ const ForgetPassword = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  subBtn: {
-    alignItems: 'center',
-  },
-});
-
-export default ForgetPassword;
+export default SignUp;
