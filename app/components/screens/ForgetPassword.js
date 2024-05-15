@@ -5,7 +5,7 @@ import FormNavigator from '../FormNavigator';
 import AppInput from '../AppInput';
 import SubmitButton from '../SubmitButton';
 import {useNavigation} from '@react-navigation/native';
-import {navigateToLogin, navigateToSignUp} from '../../utils/helper.js';
+import {navigateToSignIn, navigateToSignUp} from '../../utils/helper.js';
 import * as yup from 'yup';
 import CustomFormik from '../CustomFormik.js';
 
@@ -38,9 +38,9 @@ const ForgetPassword = () => {
         <AppInput name="email" placeholder="Email" />
         <SubmitButton title={'send link'} style={styles.subBtn} />
         <FormNavigator
-          onLeftLinkPress={navigateToLogin(navigation)}
+          onLeftLinkPress={navigateToSignIn(navigation)}
           onRightLinkPress={navigateToSignUp(navigation)}
-          leftLinkText="Log in"
+          leftLinkText="Sign In"
           rightLinkText="Sign Up"
         />
       </CustomFormik>

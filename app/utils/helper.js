@@ -1,11 +1,11 @@
-export const navigateToLogin = navigation => () => {
-    navigation.navigate('Login');
+export const navigateToSignIn = navigation => () => {
+  navigation.navigate('SignIn');
 };
 
 export const navigateToSignUp = navigation => () => {
-    navigation.navigate('Signup');
+  navigation.navigate('SignUp');
 };
 
 export const navigateToForgetPassword = navigation => () => {
-    navigation.navigate('ForgetPassword');
+  navigation.navigate('ForgetPassword');
 };

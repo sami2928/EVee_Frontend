@@ -29,7 +29,7 @@ const validationSchema = yup.object({
     .required('Password is missing!'),
 });
 
-const Login = () => {
+const SignIn = () => {
   const navigation = useNavigation();
 
   const handleLogin = async (values, formikActions) => {
@@ -63,4 +63,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignIn;

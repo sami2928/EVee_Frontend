@@ -9,8 +9,6 @@ const catchError = error => {
 export const register = async values => {
   try {
     const {data} = await client.post('/profile/auth/register', {...values});
-    console.log(data);
-
     return data;
   } catch (error) {
     return catchError(error);
@@ -19,8 +17,6 @@ export const register = async values => {
 export const login = async values => {
   try {
     const {data} = await client.post('/profile/auth/login', {...values});
-    console.log(data);
-
     return data;
   } catch (error) {
     return catchError(error);

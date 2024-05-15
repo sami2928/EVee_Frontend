@@ -3,7 +3,10 @@ import FormContainer from '../FormContainer';
 import FormNavigator from '../FormNavigator';
 import SubmitButton from '../SubmitButton';
 import {useNavigation} from '@react-navigation/native';
-import {navigateToForgetPassword, navigateToLogin} from '../../utils/helper.js';
+import {
+  navigateToForgetPassword,
+  navigateToSignIn,
+} from '../../utils/helper.js';
 import * as yup from 'yup';
 import CustomFormik from '../CustomFormik.js';
 import {register} from '../../utils/auth.js';
@@ -28,7 +31,7 @@ const validationSchema = yup.object({
     .required('Password is missing!'),
 });
 
-const Signup = () => {
+const SignUp = () => {
   const navigation = useNavigation();
 
   const handleSignUp = async (values, formikActions) => {
@@ -53,9 +56,9 @@ const Signup = () => {
         <AppInput secureTextEntry name="password" placeholder="Password" />
         <SubmitButton title="Sign Up" />
         <FormNavigator
-          onLeftLinkPress={navigateToLogin(navigation)}
+          onLeftLinkPress={navigateToSignIn(navigation)}
           onRightLinkPress={navigateToForgetPassword(navigation)}
-          leftLinkText="Log in"
+          leftLinkText="Sign In"
           rightLinkText="Forget Password"
         />
       </CustomFormik>
@@ -63,4 +66,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignUp;
