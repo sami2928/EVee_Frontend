@@ -6,10 +6,13 @@ import SubmitButton from '../SubmitButton';
 import {
   navigateToForgetPassword,
   navigateToSignUp,
+  updateNotification,
 } from '../../utils/helper.js';
 import * as yup from 'yup';
 import CustomFormik from '../CustomFormik.js';
 import {login} from '../../utils/auth.js';
+import AppNotification from '../AppNotification.js';
+import {useState} from 'react';
 
 const initialValues = {
   email: '',
@@ -31,35 +34,45 @@ const validationSchema = yup.object({
 
 const SignIn = () => {
   const navigation = useNavigation();
+  const [message, setMessage] = useState({
+    text: '',
+    type: '',
+  });
 
   const handleLogin = async (values, formikActions) => {
     const res = await login(values);
     formikActions.setSubmitting(false);
 
     if (!res.success) {
-      return console.log(res.error);
+      return updateNotification(setMessage, res.error);
     }
     formikActions.resetForm();
     console.log(res);
   };
 
   return (
-    <FormContainer>
-      <CustomFormik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleLogin}>
-        <AppInput name="email" placeholder="Email" />
-        <AppInput secureTextEntry name="password" placeholder="Password" />
-        <SubmitButton title="Login" />
-        <FormNavigator
-          onLeftLinkPress={navigateToSignUp(navigation)}
-          onRightLinkPress={navigateToForgetPassword(navigation)}
-          leftLinkText="Sign Up"
-          rightLinkText="Forget Password"
-        />
-      </CustomFormik>
-    </FormContainer>
+    <>
+      {message.text ? (
+        <AppNotification type={message.type} text={message.text} />
+      ) : null}
+
+      <FormContainer>
+        <CustomFormik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleLogin}>
+          <AppInput name="email" placeholder="Email" />
+          <AppInput secureTextEntry name="password" placeholder="Password" />
+          <SubmitButton title="Login" />
+          <FormNavigator
+            onLeftLinkPress={navigateToSignUp(navigation)}
+            onRightLinkPress={navigateToForgetPassword(navigation)}
+            leftLinkText="Sign Up"
+            rightLinkText="Forget Password"
+          />
+        </CustomFormik>
+      </FormContainer>
+    </>
   );
 };
 

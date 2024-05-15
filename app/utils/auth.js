@@ -22,3 +22,11 @@ export const login = async values => {
     return catchError(error);
   }
 };
+export const forgetPassword = async email => {
+  try {
+    const {data} = await client.post('/profile/auth/forgot-password', {email});
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};
