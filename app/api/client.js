@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'http://192.168.1.6:8000',
+  baseURL: 'https://evee-backend-24d42739ea4e.herokuapp.com:8000',
 });
 
 export default client;
