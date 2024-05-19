@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, StackActions} from '@react-navigation/native';
 import AppInput from '../AppInput';
 import FormContainer from '../FormContainer';
 import FormNavigator from '../FormNavigator';
@@ -47,7 +47,8 @@ const SignIn = () => {
       return updateNotification(setMessage, res.error);
     }
     formikActions.resetForm();
-    console.log(res);
+
+    navigation.dispatch(StackActions.replace('Home', {profile: res.user}));
   };
 
   return (
