@@ -1,7 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-const Home = () => {
+const Home = ({route}) => {
+  const {profile} = route.params;
+
   return (
     <View>
       <Text>Home</Text>
