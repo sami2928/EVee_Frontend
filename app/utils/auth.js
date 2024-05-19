@@ -30,3 +30,14 @@ export const forgetPassword = async email => {
     return catchError(error);
   }
 };
+export const verifyEmail = async (otp, userId) => {
+  try {
+    const {data} = await client.post('/profile/auth/verify-email', {
+      otp,
+      userId,
+    });
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};
