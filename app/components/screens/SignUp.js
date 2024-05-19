@@ -49,6 +49,7 @@ const SignUp = () => {
       return updateNotification(setMessage, res.error);
     }
     formikActions.resetForm();
+
     navigation.dispatch(
       StackActions.replace('Verification', {profile: res.user}),
     );
