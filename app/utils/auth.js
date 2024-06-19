@@ -41,3 +41,12 @@ export const verifyEmail = async (otp, userId) => {
     return catchError(error);
   }
 };
+export const userQRCode = async (userId) => {
+  try{
+    const {data} = await client.post('/profile/auth//qr/scan', {userId});
+    return data;
+  } catch (error){
+    return catchError(error);
+  }
+
+}
