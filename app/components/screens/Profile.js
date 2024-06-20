@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -11,12 +11,15 @@ import {Card} from '@ant-design/react-native';
 import HomeContainer from '../HomeContainer';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import QRCode from 'react-native-qrcode-svg';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import ViewShot from 'react-native-view-shot';
+import Share from 'react-native-share';
 
 const Profile = ({route}) => {
   const profile = route.params ? route.params.profile : null;
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const viewShotRef = useRef(null);
 
   // Assume we have uploaded the image and obtained the URL
   const qrCodeUrl =
@@ -31,9 +34,27 @@ const Profile = ({route}) => {
     navigation.dispatch(StackActions.replace('SignIn'));
   };
 
-  const handleSharePress = () => {
-    // Implement your share functionality here
-    alert('Share functionality will be implemented here');
+  const handleSharePress = async () => {
+    try {
+      if (viewShotRef.current) {
+        // Capture screenshot of the component
+        const uri = await viewShotRef.current.capture();
+
+        // Prepare the share options
+        const options = {
+          title: 'Share Account Details',
+          url: uri,
+          type: 'image/png', // Specify type as PNG or JPG as needed
+        };
+
+        // Open the share dialog
+        await Share.open(options);
+      } else {
+        console.error('viewShotRef is not initialized properly');
+      }
+    } catch (error) {
+      console.error('Error sharing:', error.message);
+    }
   };
 
   return (
@@ -42,68 +63,75 @@ const Profile = ({route}) => {
       onLogoutPress={handleLogoutPress}
       showProfileIcon={false}>
       <View style={styles.content}>
-        <Card style={styles.card}>
-          <Card.Body style={styles.cardBody}>
-            <View style={styles.qrContainer}>
-              <View style={styles.qrCircle}>
-                <QRCode
-                  value={qrCodeUrl}
-                  size={70} // Reduced size for better fit
-                  ecl="L" // Use lower error correction level to store more data
-                />
-                <TouchableOpacity
-                  style={styles.qrButton}
-                  onPress={() => setModalVisible(true)}>
-                  <Text style={styles.qrButtonText}>Show QR</Text>
-                </TouchableOpacity>
+        <ViewShot ref={viewShotRef} options={{format: 'png', quality: 0.9}}>
+          <Card style={styles.card}>
+            <Card.Body style={styles.cardBody}>
+              <View style={styles.qrContainer}>
+                <View style={styles.qrCircle}>
+                  <QRCode
+                    value={qrCodeUrl}
+                    size={70} // Reduced size for better fit
+                    ecl="L" // Use lower error correction level to store more data
+                  />
+                  <TouchableOpacity
+                    style={styles.qrButton}
+                    onPress={() => setModalVisible(true)}>
+                    <Text style={styles.qrButtonText}>Show QR</Text>
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.userName}>{profile.userName}</Text>
               </View>
-              <Text style={styles.userName}>{profile.userName}</Text>
-            </View>
-            <View style={styles.cardContent}>
-              <View style={styles.field}>
-                <Text style={styles.label}>Email:</Text>
-                <Text
-                  style={styles.value}
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  {profile.email}
-                </Text>
+              <View style={styles.cardContent}>
+                <View style={styles.field}>
+                  <Text style={styles.label}>Email:</Text>
+                  <Text
+                    style={styles.value}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
+                    {profile.email}
+                  </Text>
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.label}>Password:</Text>
+                  <Text style={styles.value}>
+                    {'*'.repeat(Math.min(profile.password.length, 8))}
+                  </Text>
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.label}>Admin:</Text>
+                  <Text style={styles.value}>
+                    {profile.is_admin ? 'Yes' : 'No'}
+                  </Text>
+                </View>
+                <View style={styles.field}>
+                  <Text style={styles.label}>Verified:</Text>
+                  <Text style={styles.value}>
+                    {profile.verified ? 'Yes' : 'No'}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Password:</Text>
-                <Text style={styles.value}>
-                  {'*'.repeat(Math.min(profile.password.length, 8))}
-                </Text>
-              </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Admin:</Text>
-                <Text style={styles.value}>
-                  {profile.is_admin ? 'Yes' : 'No'}
-                </Text>
-              </View>
-              <View style={styles.field}>
-                <Text style={styles.label}>Verified:</Text>
-                <Text style={styles.value}>
-                  {profile.verified ? 'Yes' : 'No'}
-                </Text>
-              </View>
-            </View>
-          </Card.Body>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.detailsButton]}
-              onPress={handleSharePress}>
-              <Icon name="share" size={20} color="white" style={styles.icon} />
-              <Text style={styles.detailsButtonText}>Account Details</Text>
-            </TouchableOpacity>
-            <View style={styles.separator} />
-            <TouchableOpacity
-              style={[styles.button, styles.backButton]}
-              onPress={handleHomePress}>
-              <Text style={styles.buttonText}>Back</Text>
-            </TouchableOpacity>
-          </View>
-        </Card>
+            </Card.Body>
+          </Card>
+        </ViewShot>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, styles.detailsButton]}
+            onPress={handleSharePress}>
+            <Ionicons
+              name="share-social"
+              size={20}
+              color="white"
+              style={styles.icon}
+            />
+            <Text style={styles.detailsButtonText}>Account Details</Text>
+          </TouchableOpacity>
+          <View style={styles.separator} />
+          <TouchableOpacity
+            style={[styles.button, styles.backButton]}
+            onPress={handleHomePress}>
+            <Text style={styles.buttonText}>Back</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Modal
