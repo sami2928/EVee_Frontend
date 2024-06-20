@@ -19,7 +19,9 @@ const Profile = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   // Assume we have uploaded the image and obtained the URL
-  const qrCodeUrl = 'https://your-image-hosting-service.com/path-to-image';
+  const qrCodeUrl =
+    profile.qrCodeImage ||
+    'https://your-image-hosting-service.com/path-to-image';
 
   const handleHomePress = () => {
     navigation.dispatch(StackActions.replace('Home', {profile: profile}));
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   cardBody: {
-    paddingBottom: 10, // Remove padding at the bottom to merge with buttons
+    paddingBottom: 30, // Remove padding at the bottom to merge with buttons
   },
   qrContainer: {
     alignItems: 'center',
@@ -190,7 +192,8 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#000',
     textAlign: 'left', // Align text to the right
-    marginRight: 10, // Adjust space between label and value
+    marginRight: 10, // Adjust space between label and value.
+    marginBottom: 10,
   },
   value: {
     color: '#000',
@@ -202,9 +205,13 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10, // Rounded bottom-left corner
     borderBottomRightRadius: 10, // Rounded bottom-right corner
     overflow: 'hidden', // Ensure corners are rounded
-    height: 60, // Increase height of the buttons
+    height: 50, // Increase height of the buttons
     borderTopWidth: 1, // Add a border to the top
-    borderTopColor: '#000', // Set the border color to black
+    borderTopColor: '#fff', // Set the border color to black
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   button: {
     flex: 1,
@@ -232,7 +239,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     width: 1,
-    backgroundColor: '#000', // Black color for the separator line
+    backgroundColor: '#fff', // Black color for the separator line
   },
   modalContainer: {
     flex: 1,
