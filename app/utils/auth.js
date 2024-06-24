@@ -41,12 +41,30 @@ export const verifyEmail = async (otp, userId) => {
     return catchError(error);
   }
 };
-export const userQRCode = async (userId) => {
-  try{
+export const userQRCode = async userId => {
+  try {
     const {data} = await client.post('/profile/auth//qr/scan', {userId});
     return data;
-  } catch (error){
+  } catch (error) {
     return catchError(error);
   }
+};
 
-}
+export const findUserById = async userId => {
+  try {
+    const {data} = await client.get(`/profile/auth/user/${userId}`);
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};
+
+export const fetchUsers = async () => {
+  try {
+    const {data} = await client.get(`/profile/auth/users`);
+    console.log(`Auth Data: ${data}`);
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};
